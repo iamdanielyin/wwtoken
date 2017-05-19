@@ -12,6 +12,10 @@
     "企业号",
     "access_token"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yinfxs/unexpired-qytoken.git"
+  },
   "author": "yinfxs",
   "license": "Apache-2.0",
   "dependencies": {
