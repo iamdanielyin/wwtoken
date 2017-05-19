@@ -1,0 +1,29 @@
+{
+  "name": "unexpired-qytoken",
+  "version": "0.1.0",
+  "description": "永不过期的企业号令牌，将定期自动从企业号接口获取最新令牌并缓存到Redis中",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "wWichat",
+    "Weixin",
+    "企业号",
+    "access_token"
+  ],
+  "author": "yinfxs",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ioredis": "^3.0.0",
+    "node-fetch": "^1.6.3",
+    "qs": "^6.4.0"
+  },
+  "config": {
+    "corpid": "xxxxxxxxxxxxxxxxxx",
+    "corpsecret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "tokenKey": "unexpired_qytoken_access_token",
+    "redis": "redis://127.0.0.1:6379",
+    "ms": 7000
+  }
+}
