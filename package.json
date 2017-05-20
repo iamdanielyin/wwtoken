@@ -25,7 +25,7 @@
   },
   "config": {
     "corpid": "xxxxxxxxxxxxxxxxxx",
-    "corpsecret": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "corpsecret": "xxxxxxxxxxxxxxxxxx",
     "tokenKey": "unexpired_qytoken_access_token",
     "redis": "redis://127.0.0.1:6379",
     "ms": 7000
