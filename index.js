@@ -3,36 +3,84 @@
  * Created by yinfxs on 2017/5/19.
  */
 
-const Redis = require('ioredis');
-const pkgconf = require('./package.json').config || {};
+const path = require('path');
 const qs = require('qs');
+const fsx = require('fs-extra');
+const winston = require('winston');
 const fetch = require('node-fetch');
-const config = Object.assign({
-    tokenKey: 'unexpired_qytoken_access_token',
+const Redis = require('ioredis');
+const config = {
+    url: 'https://qyapi.weixin.qq.com/cgi-bin/gettoken',
+    corpid: null,
+    corpsecret: null,
+    key: 'wwtoken_access_token',
     redis: 'redis://127.0.0.1:6379',
+    logsDir: path.resolve(process.cwd(), 'wwtoken-logs'),
     ms: 7000
-}, pkgconf);
-const redis = new Redis(config.redis);
-const URL = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken';
+};
+
 const app = {};
 module.exports = app;
+
+var redis = null;
+var logger = null;
+
+/**
+ * 初始化配置
+ * @param object
+ */
+app.config = (object) => {
+    if (typeof object !== 'object') return config;
+    if (object.logsDir) object.logsDir = path.resolve(process.cwd(), object.logsDir);
+    Object.assign(config, object);
+
+    fsx.ensureDirSync(config.logsDir);
+    redis = new Redis(config.redis);
+    logger = logger = new (winston.Logger)({
+        transports: [
+            new (winston.transports.Console)({ level: 'info' }),
+            new (winston.transports.File)({
+                name: 'info-file',
+                filename: path.resolve(config.logsDir, 'info.log'),
+                level: 'info',
+                maxsize: 31457280,
+                maxFiles: 5
+            }),
+            new (winston.transports.File)({
+                name: 'error-file',
+                filename: path.resolve(config.logsDir, 'error.log'),
+                level: 'error',
+                maxsize: 31457280,
+                maxFiles: 5
+            })
+        ]
+    });
+};
 
 /**
  * 根据配置获取企业号令牌
  * @returns {Promise.<{}>}
  */
-app.fetch = async () => {
-    console.log('从接口获取最新令牌......');
+app.fetch = async (object) => {
+    if (object) app.config(object);
+    logger.log('Getting the latest token...');
     const { corpid, corpsecret } = config;
-    if (!corpid || !corpsecret) return console.error('corpid和corpsecret参数配置异常');
+    if (!corpid || !corpsecret) {
+        logger.error(`Configuration error: 'corpid' and 'corpsecret' can not be empty`);
+        return setTimeout(process.exit, 500);
+    }
     const result = {};
     try {
-        const res = await fetch(`${URL}?${qs.stringify({ corpid, corpsecret })}`, { method: 'GET' });
+        const res = await fetch(`${config.url}?${qs.stringify({ corpid, corpsecret })}`, { method: 'GET' });
         const data = await res.json() || {};
-        console.log(`成功：${JSON.stringify(data, null, 0)}`);
         config.data = data;
         const { expires_in, access_token } = data;
-        if (!expires_in || !access_token || (typeof expires_in !== 'number')) return console.error(`令牌接口数据异常：${JSON.stringify(data, null, 0)}`);
+        if (!expires_in || !access_token || (typeof expires_in !== 'number')) {
+            logger.error(`Get token failed: ${JSON.stringify(data, null, 0)}`);
+            return setTimeout(process.exit, 500);
+        } else {
+            logger.info(`Get token successful: ${JSON.stringify(data, null, 0)}`);
+        }
         config.ms = config.ms || expires_in - 200;
         config.ms = config.ms < 400 ? 400 : config.ms; //避免令牌更新频率过快
         if (!config.task) app.task(data);
@@ -40,7 +88,8 @@ app.fetch = async () => {
 
         Object.assign(result, data);
     } catch (e) {
-        console.error(`获取令牌接口异常：${e}`);
+        logger.error(`Get token failed: ${e}`);
+        return setTimeout(process.exit, 500);
     }
     return result;
 };
@@ -63,10 +112,9 @@ app.task = ({ expires_in, access_token }) => {
 app.redis = async ({ access_token }) => {
     if (!redis || !access_token || !config.ms) return;
     try {
-        await redis.pipeline().del(config.tokenKey).set(config.tokenKey, access_token, 'EX', config.ms).exec();
+        await redis.pipeline().del(config.key).set(config.key, access_token, 'EX', config.ms).exec();
     } catch (e) {
-        console.error(`更新令牌到Redis异常：${e}`);
+        logger.error(`Update token to redis failure: ${e}`);
+        return setTimeout(process.exit, 500);
     }
 };
-
-app.fetch();
