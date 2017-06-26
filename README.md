@@ -23,7 +23,7 @@ npm i wwtoken -g
 
 * corpid：企业ID
 * corpsecret：应用的凭证密钥，每个应用有独立的secret，所以每个应用的access_token应该分开来获取
-* key：令牌数据缓存在Redis的键
+* key：令牌数据缓存在Redis的键，默认wwtoken_access_token
 * redis：Redis的连接地址，按照`ioredis`的规范指定配置即可
 * ms：令牌自动刷新的间隔秒数，可选参数，目前企业号令牌过期时间为7200秒，默认7000秒获取一次接口并刷新缓存
 * logsDir：日志存放目录，相对路径或绝对路径皆可
