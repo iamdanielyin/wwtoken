@@ -1,6 +1,6 @@
 {
   "name": "wwtoken",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "自动更新的企业微信令牌，定期自动获取企业微信令牌并缓存至Redis",
   "main": "index.js",
   "keywords": [

@@ -2,7 +2,7 @@
 
 本模块只干一件事，定期自动获取企业微信令牌并缓存至Redis。
 
-### 全局安装
+## 全局安装
 
 ```bash
 npm i wwtoken -g
@@ -19,7 +19,7 @@ npm i wwtoken -g
 
 > Tips: 支持JavaScript和JSON两种配置，当不指定配置文件参数时，会自动识别当前执行目录下的`config.js`、`config.json`、`wwtoken.config.js`、`wwtoken.config.json`或`.wwtokenrc`这几个文件名作为配置文件。
 
-## 支持的配置项
+### 支持的配置项
 
 * corpid：企业ID
 * corpsecret：应用的凭证密钥，每个应用有独立的secret，所以每个应用的access_token应该分开来获取
@@ -28,14 +28,14 @@ npm i wwtoken -g
 * ms：令牌自动刷新的间隔秒数，可选参数，目前企业号令牌过期时间为7200秒，默认7000秒获取一次接口并刷新缓存
 * logsDir：日志存放目录，相对路径或绝对路径皆可
 
-### 启动模块
+## 启动模块
 
 
 ```bash
 wwtoken <config_path>
 ```
 
-### 后台运行
+## 后台运行
 
 这里主要利用`pm2`工具实现。
 
@@ -51,11 +51,11 @@ npm i pm2 -g
 pm2 start -n myapp wwtoken
 ```
 
-### 使用令牌
+## 使用令牌
 
 当每次需要使用令牌时，直接通过上面设置的`key`从Redis中获取即可，获取的值即为令牌数据。
 
-### 传送门
+## 传送门
 
 * [PM2](https://www.npmjs.com/package/pm2)
 * [Redis](https://redis.io/)
