@@ -8,11 +8,8 @@ const program = require('commander');
 
 program
 .version(package.version)
-.arguments('<config_file>', configAction)
-.action();
-
-program.parse(process.argv);
-if (process.argv.length < 3) return configAction();
+.option('-c, --config [config_file]', 'Specify a configuration file')
+.parse(process.argv);
 
 /**
  * 检测配置文件
@@ -45,3 +42,5 @@ function configAction(file) {
     const config = require(absolute_path);
     token.fetch(config);
 }
+
+configAction(program.config);

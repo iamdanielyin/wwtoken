@@ -82,7 +82,7 @@ app.fetch = async (object) => {
             logger.info(`Get token successful: ${JSON.stringify(data, null, 0)}`);
         }
         config.ms = config.ms || expires_in - 200;
-        config.ms = config.ms < 400 ? 400 : config.ms; //避免令牌更新频率过快
+        // config.ms = config.ms < 400 ? 400 : config.ms; //避免令牌更新频率过快
         if (!config.task) app.task(data);
         app.redis(data);
 

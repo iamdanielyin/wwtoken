@@ -1,6 +1,6 @@
 {
   "name": "wwtoken",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "自动更新的企业微信令牌，定期自动获取企业微信令牌并缓存至Redis",
   "main": "index.js",
   "keywords": [
@@ -26,13 +26,6 @@
     "node-fetch": "^1.6.3",
     "qs": "^6.4.0",
     "winston": "^2.3.1"
-  },
-  "config": {
-    "corpid": "xxxxxxxxxxxxxxxxxx",
-    "corpsecret": "xxxxxxxxxxxxxxxxxx",
-    "tokenKey": "unexpired_qytoken_access_token",
-    "redis": "redis://127.0.0.1:6379",
-    "ms": 7000
   },
   "engines": {
     "node": ">= 7.6.0"
