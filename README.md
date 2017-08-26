@@ -53,23 +53,7 @@ npm i wwtoken -g
 
 
 ```bash
-wwtoken <config_path>
-```
-
-## 后台运行
-
-这里主要利用`pm2`工具实现。
-
-1. 全局安装`pm2`工具：
-
-```bash
-npm i pm2 -g
-```
-
-2. 启动模块：
-
-```bash
-pm2 start -n myapp wwtoken
+wwtoken -c` <config_path>
 ```
 
 ## 使用令牌
