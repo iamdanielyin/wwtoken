@@ -2,7 +2,7 @@
  * @Author: yinfxs 
  * @Date: 2017-08-26 14:13:01 
  * @Last Modified by: yinfxs
- * @Last Modified time: 2017-08-26 16:54:43
+ * @Last Modified time: 2017-08-26 17:27:59
  */
 
 const path = require('path');
@@ -68,6 +68,7 @@ app.init = (object) => {
  * @param config
  */
 function initLogs(config) {
+    config.logsDir = config.logsDir || 'wwtoken-logs';
     config.logsDir = path.resolve(process.cwd(), config.logsDir);
     fsx.ensureDirSync(config.logsDir);
 
