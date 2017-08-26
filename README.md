@@ -12,8 +12,26 @@ npm i wwtoken -g
 
 ```json
 {
-  "corpid": "xxx",
-  "corpsecret": "xxx"
+  "redis": "redis://127.0.0.1:6379",
+  "logsDir": "wwtoken-logs",
+  "configs": [
+    {
+      "corpid": null,
+      "corpsecret": null,
+      "token_key": "wwtoken_access_tokenA",
+      "token_expires": 7000,
+      "ticket_key": "wwtoken_jsapi_ticketA",
+      "ticket_expires": 7000
+    },
+    {
+      "corpid": null,
+      "corpsecret": null,
+      "token_key": "wwtoken_access_tokenB",
+      "token_expires": 7000,
+      "ticket_key": "wwtoken_jsapi_ticketB",
+      "ticket_expires": 7000
+    }
+  ]
 }
 ```
 
@@ -21,12 +39,15 @@ npm i wwtoken -g
 
 ### 支持的配置项
 
+* redis：Redis的连接地址，按照`ioredis`的规范指定配置即可
+* logsDir：日志存放目录，执行目录下的相对路径或绝对路径皆可
+* configs：配置数组部分
 * corpid：企业ID
 * corpsecret：应用的凭证密钥，每个应用有独立的secret，所以每个应用的access_token应该分开来获取
-* key：令牌数据缓存在Redis的键，默认wwtoken_access_token
-* redis：Redis的连接地址，按照`ioredis`的规范指定配置即可
-* ms：令牌自动刷新的间隔秒数，可选参数，目前企业号令牌过期时间为7200秒，默认7000秒获取一次接口并刷新缓存
-* logsDir：日志存放目录，相对路径或绝对路径皆可
+* token_key：令牌数据缓存在Redis的键，必填参数，默认wwtoken_access_token
+* token_expires：令牌自动刷新的间隔秒数，可选参数，目前企业号令牌过期时间为7200秒，默认7000秒获取一次接口并刷新缓存
+* ticket_key：JSAPI票据数据缓存在Redis的键，可选参数
+* ticket_expires：JSAPI票据自动刷新的间隔秒数，可选参数，默认7000秒获取一次接口并刷新缓存
 
 ## 启动模块
 
@@ -62,3 +83,4 @@ pm2 start -n myapp wwtoken
 * [ioredis](https://www.npmjs.com/package/ioredis)
 * [企业微信API文档](https://work.weixin.qq.com/api/doc)
 * [企业微信获取access_token](https://work.weixin.qq.com/api/doc#10013/第三步：获取access_token)
+* [企业微信获取jsapi_ticket](https://work.weixin.qq.com/api/doc#10029/附录1-JS-SDK使用权限签名算法)

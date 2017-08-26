@@ -5,7 +5,7 @@ build
 logs
 *.log
 log
-logs
+*-logs
 public
 package-lock.json
 .vscode

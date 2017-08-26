@@ -40,7 +40,7 @@ function configAction(file) {
 
     const absolute_path = path.resolve(process.cwd(), file);
     const config = require(absolute_path);
-    token.fetch(config);
+    token.init(config);
 }
 
 configAction(program.config);

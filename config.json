@@ -1,4 +1,16 @@
 {
-  "corpid": "xxx",
-  "corpsecret": "xxx"
+  "configs": [
+    {
+      "corpid": "xxx",
+      "corpsecret": "xxx",
+      "token_key": "wwtoken_access_tokenA",
+      "ticket_key": "wwtoken_jsapi_ticketA"
+    },
+    {
+      "corpid": "xxx",
+      "corpsecret": "xxx",
+      "token_key": "wwtoken_access_tokenB",
+      "ticket_key": "wwtoken_jsapi_ticketB"
+    }
+  ]
 }
