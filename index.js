@@ -2,7 +2,7 @@
  * @Author: yinfxs 
  * @Date: 2017-08-26 14:13:01 
  * @Last Modified by: yinfxs
- * @Last Modified time: 2017-08-26 17:27:59
+ * @Last Modified time: 2017-09-01 09:14:52
  */
 
 const path = require('path');
@@ -15,7 +15,7 @@ const moment = require('moment');
 moment.locale('zh-cn');
 
 const app = {};
-const caches = {};
+const errcaches_token = {}, errcaches_ticket = {};
 module.exports = app;
 
 const config_json = {
@@ -160,6 +160,8 @@ app.fetchToken = async (corpid, corpsecret, name) => {
         logger.error(`Configuration error: 'corpid' and 'corpsecret' can not be empty`);
         return setTimeout(process.exit, 500);
     }
+    const key = `${corpid}|${corpsecret}|${name}`;
+    errcaches_token[key] = errcaches_token[key] || 0;
     try {
         const url = `${TOKEN_URL}?${qs.stringify({ corpid, corpsecret })}`;
         const res = await fetch(url);
@@ -167,14 +169,27 @@ app.fetchToken = async (corpid, corpsecret, name) => {
         const { expires_in, access_token } = data;
         if (!expires_in || !access_token || (typeof expires_in !== 'number')) {
             logger.error(`Get token failed: ${JSON.stringify(data, null, 0)}`);
-            return setTimeout(process.exit, 500);
+            return onTokenError({
+                key,
+                errcaches_token,
+                corpid,
+                corpsecret,
+                name
+            });
         } else {
             logger.info(`${moment().format(FORMAT)} => Get${name ? ` '${name}' ` : ' '}token successful! \n Request: ${url} \n Reponse: ${JSON.stringify(data, null, 2)} \n #########################################################`);
+            errcaches_token[key] = 0;
             return data;
         }
     } catch (e) {
         logger.error(`Get token failed: ${e}`);
-        return setTimeout(process.exit, 500);
+        return onTokenError({
+            key,
+            errcaches_token,
+            corpid,
+            corpsecret,
+            name
+        });
     }
 };
 
@@ -188,6 +203,8 @@ app.fetchTicket = async (access_token, name) => {
         logger.error(`Configuration error: 'access_token' can not be empty`);
         return setTimeout(process.exit, 500);
     }
+    const key = `${access_token}|${name}`;
+    errcaches_ticket[key] = errcaches_ticket[key] || 0;
     try {
         const url = `${TICKET_URL}?${qs.stringify({ access_token })}`;
         const res = await fetch(url);
@@ -195,16 +212,53 @@ app.fetchTicket = async (access_token, name) => {
         const { expires_in, ticket } = data;
         if (!expires_in || !ticket || (typeof expires_in !== 'number')) {
             logger.error(`Get ticket failed: ${JSON.stringify(data, null, 0)}`);
-            return setTimeout(process.exit, 500);
+            return onTicketError({
+                key,
+                errcaches_ticket,
+                access_token,
+                name
+            });
         } else {
             logger.info(`${moment().format(FORMAT)} => Get${name ? ` '${name}' ` : ' '}ticket successful! \n Request: ${url} \n Reponse: ${JSON.stringify(data, null, 2)} \n #########################################################`);
+            errcaches_ticket[key] = 0;
             return data;
         }
     } catch (e) {
         logger.error(`Get ticket failed: ${e}`);
-        return setTimeout(process.exit, 500);
+        return onTicketError({
+            key,
+            errcaches_ticket,
+            access_token,
+            name
+        });
     }
 };
+
+/**
+ * 获取token异常时的处理
+ * @param {*} param 
+ */
+function onTokenError({ corpid, corpsecret, name, key, errcaches_token }) {
+    errcaches_token[key]++;
+    if (errcaches_token[key] <= 100) {
+        return app.fetchToken(corpid, corpsecret, name);
+    } else {
+        return setTimeout(process.exit, 500);
+    }
+}
+
+/**
+ * 获取ticket异常时的处理
+ * @param {*} param 
+ */
+function onTicketError({ access_token, name, key, errcaches_ticket }) {
+    errcaches_ticket[key]++;
+    if (errcaches_ticket[key] <= 100) {
+        return app.fetchTicket(access_token, name);
+    } else {
+        return setTimeout(process.exit, 500);
+    }
+}
 
 /**
  * 更新Redis
