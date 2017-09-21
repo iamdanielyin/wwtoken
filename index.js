@@ -2,7 +2,7 @@
  * @Author: yinfxs 
  * @Date: 2017-08-26 14:13:01 
  * @Last Modified by: yinfxs
- * @Last Modified time: 2017-09-21 21:36:29
+ * @Last Modified time: 2017-09-21 22:44:52
  */
 
 const path = require('path');
@@ -143,7 +143,7 @@ async function initTasks(config) {
             await app.updateRedis(ticket_key, ticketObj.ticket, item.ticket_expires);
         }
         item.ticket_expires = item.ticket_expires || 7000;
-        setTimeout(ticket_cb, 4000);
+        setTimeout(ticket_cb, 8000);
         result[ticket_key] = setInterval(ticket_cb, item.ticket_expires * 1000);
         logger.info(`√ Task '${ticket_key}/${item.ticket_expires}s' is registered successfully`);
     }
