@@ -2,7 +2,7 @@
  * @Author: yinfxs 
  * @Date: 2017-08-26 14:13:01 
  * @Last Modified by: yinfxs
- * @Last Modified time: 2017-09-01 09:14:52
+ * @Last Modified time: 2017-09-21 21:36:29
  */
 
 const path = require('path');
@@ -168,7 +168,7 @@ app.fetchToken = async (corpid, corpsecret, name) => {
         const data = await res.json() || {};
         const { expires_in, access_token } = data;
         if (!expires_in || !access_token || (typeof expires_in !== 'number')) {
-            logger.error(`Get token failed: ${JSON.stringify(data, null, 0)}`);
+            logger.error(`Get${name ? ` '${name}' ` : ' '}token failed: ${JSON.stringify(data, null, 0)}`);
             return onTokenError({
                 key,
                 errcaches_token,
@@ -182,7 +182,7 @@ app.fetchToken = async (corpid, corpsecret, name) => {
             return data;
         }
     } catch (e) {
-        logger.error(`Get token failed: ${e}`);
+        logger.error(`Get${name ? ` '${name}' ` : ' '}token failed: ${e}`);
         return onTokenError({
             key,
             errcaches_token,
@@ -211,7 +211,7 @@ app.fetchTicket = async (access_token, name) => {
         const data = await res.json() || {};
         const { expires_in, ticket } = data;
         if (!expires_in || !ticket || (typeof expires_in !== 'number')) {
-            logger.error(`Get ticket failed: ${JSON.stringify(data, null, 0)}`);
+            logger.error(`Get${name ? ` '${name}' ` : ' '}ticket failed: ${JSON.stringify(data, null, 0)}`);
             return onTicketError({
                 key,
                 errcaches_ticket,
@@ -224,7 +224,7 @@ app.fetchTicket = async (access_token, name) => {
             return data;
         }
     } catch (e) {
-        logger.error(`Get ticket failed: ${e}`);
+        logger.error(`Get${name ? ` '${name}' ` : ' '}ticket failed: ${e}`);
         return onTicketError({
             key,
             errcaches_ticket,
