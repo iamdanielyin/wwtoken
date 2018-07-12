@@ -2,7 +2,7 @@
  * @Author: yinfxs 
  * @Date: 2017-08-26 14:13:01 
  * @Last Modified by: yinfxs
- * @Last Modified time: 2017-09-22 11:08:55
+ * @Last Modified time: 2018-07-12 15:47:53
  */
 
 const path = require('path');
@@ -98,7 +98,7 @@ function initLogs(config) {
  * @param config 
  */
 function initRedis(config) {
-    config.redis = config.redis || 'redis://127.0.0.1:6379';
+    config.redis = process.env.REDIS_URL || config.redis || 'redis://127.0.0.1:6379';
     return new Redis(config.redis);
 }
 

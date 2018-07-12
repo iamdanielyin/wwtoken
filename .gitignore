@@ -9,3 +9,4 @@ log
 public
 package-lock.json
 .vscode
+.history
