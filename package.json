@@ -20,13 +20,13 @@
   "author": "yinfxs",
   "license": "Apache-2.0",
   "dependencies": {
-    "commander": "^2.10.0",
-    "fs-extra": "^3.0.1",
-    "ioredis": "^3.0.0",
+    "commander": "^3.0.0",
+    "fs-extra": "^8.1.0",
+    "ioredis": "^4.14.0",
     "moment": "^2.18.1",
-    "node-fetch": "^1.6.3",
+    "node-fetch": "^2.6.0",
     "qs": "^6.4.0",
-    "winston": "^2.3.1"
+    "winston": "^3.2.1"
   },
   "engines": {
     "node": ">= 7.6.0"
