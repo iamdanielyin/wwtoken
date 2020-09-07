@@ -1,6 +1,6 @@
 /*
- * @Author: yinfxs 
- * @Date: 2017-08-26 14:13:01 
+ * @Author: yinfxs
+ * @Date: 2017-08-26 14:13:01
  * @Last Modified by: yinfxs
  * @Last Modified time: 2018-07-12 15:47:53
  */
@@ -72,7 +72,7 @@ function initLogs(config) {
     config.logsDir = path.resolve(process.cwd(), config.logsDir);
     fsx.ensureDirSync(config.logsDir);
 
-    return new (winston.Logger)({
+    return winston.createLogger({
         transports: [
             new (winston.transports.Console)({ level: 'info' }),
             new (winston.transports.File)({
@@ -95,7 +95,7 @@ function initLogs(config) {
 
 /**
  * 初始化Redis配置
- * @param config 
+ * @param config
  */
 function initRedis(config) {
     config.redis = process.env.REDIS_URL || config.redis || 'redis://127.0.0.1:6379';
@@ -105,7 +105,7 @@ function initRedis(config) {
 
 /**
  * 初始化任务配置
- * @param config 
+ * @param config
  */
 async function initTasks(config) {
     const { configs } = config;
@@ -155,7 +155,7 @@ async function initTasks(config) {
  * @returns {Promise.<{}>}
  */
 app.fetchToken = async (corpid, corpsecret, name) => {
-    logger.log('Getting the latest token...');
+    logger.info('Getting the latest token...');
     if (!corpid || !corpsecret) {
         logger.error(`Configuration error: 'corpid' and 'corpsecret' can not be empty`);
         return;
@@ -198,7 +198,7 @@ app.fetchToken = async (corpid, corpsecret, name) => {
  * @returns {Promise.<{}>}
  */
 app.fetchTicket = async (access_token, name) => {
-    logger.log('Getting a new ticket...');
+    logger.info('Getting a new ticket...');
     if (!access_token) {
         logger.error(`Configuration error: 'access_token' can not be empty`);
         return;
@@ -236,7 +236,7 @@ app.fetchTicket = async (access_token, name) => {
 
 /**
  * 获取token异常时的处理
- * @param {*} param 
+ * @param {*} param
  */
 function onTokenError({ corpid, corpsecret, name, key, errcaches_token }) {
     errcaches_token[key]++;
@@ -249,7 +249,7 @@ function onTokenError({ corpid, corpsecret, name, key, errcaches_token }) {
 
 /**
  * 获取ticket异常时的处理
- * @param {*} param 
+ * @param {*} param
  */
 function onTicketError({ access_token, name, key, errcaches_ticket }) {
     errcaches_ticket[key]++;
