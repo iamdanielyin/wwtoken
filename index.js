@@ -132,7 +132,7 @@ async function initTasks(config) {
         }
         item.token_expires = item.token_expires || 7000;
         setTimeout(token_cb, 2000);
-        result[token_key] = setInterval(token_cb, item.token_expires * 1000);
+        result[token_key] = setInterval(token_cb, item.token_expires * 1000 - 600 * 1000);
         logger.info(`√ Task '${token_key}/${item.token_expires}s' is registered successfully`);
         // 设置票据key
         if (!ticket_key) continue;
@@ -144,7 +144,7 @@ async function initTasks(config) {
         }
         item.ticket_expires = item.ticket_expires || 7000;
         setTimeout(ticket_cb, 8000);
-        result[ticket_key] = setInterval(ticket_cb, item.ticket_expires * 1000);
+        result[ticket_key] = setInterval(ticket_cb, item.ticket_expires * 1000 - 600 * 1000);
         logger.info(`√ Task '${ticket_key}/${item.ticket_expires}s' is registered successfully`);
     }
     return result;
